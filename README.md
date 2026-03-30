@@ -1,0 +1,2 @@
+# LeetCode Coding Problems Repo
+My own solutions to LeetCode problems, with some guidance from various sources to deepen my understanding of each problem and how to solve it efficiently. I created this repository to document my learning progress and the things I've learned along the way.
