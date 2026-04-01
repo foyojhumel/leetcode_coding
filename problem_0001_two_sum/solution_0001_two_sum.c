@@ -29,29 +29,11 @@
             functions like malloc(), realloc(), and free. It grows towards higher
             memory address and stack segment. Heap is shared by all shared libraries
             and dynamically loaded modules in a process.
-    4. 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    */
-
-
-
-
-
-
-
-
+    4. Stack Segment - stores local variables, function parameters, and return
+            addresses for each function call. Usually at higher memory addresses and
+            grows opposite to the heap. When the stack and heap meet, the program's
+            free memory is exhausted.
+*/
 
 
 // First solution
@@ -74,7 +56,97 @@ int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
         }
     }
 
+    //Set returnSize to 2, this is to inform leetcode test automation that the
+    // answer size is 8bytes (2 * int size which is 4bytes)
     *returnSize = 2;
     
     return returnArray;
+}
+
+// Second solution
+//  Using heap data structure
+//  Execution time = 0ms, Memory size = 10.5mb
+//create a struct that will become a linked list
+struct hashNode {
+    int keyValue;   // the value from given array nums
+    int index;  // index position of keyValue
+    struct hashNode* next;  // creates a linked list to next struct
+};
+
+int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
+    //sets hashTable size to twice the size of given numsSize, this will ensure
+    // no collision will happen when mapping additional element to the hash table
+    int tableSize = numsSize * 2;
+    //calloc is used here to take advantage of initializing all elements to 0
+    // which is equivalent to a NULL
+    //if malloc is used here, a for loop will be needed to set each element to a
+    // NULL because malloc initialize elements to garbage values
+    struct hashNode** hashTable = calloc(tableSize, sizeof(struct hashNode*));
+    //struct hashNode* means a pointer to a single struct hashNode
+    //struct hashNode** means a pointer to a pointer to a struct hashNode hence
+    // it makes hashTable an array of pointers.
+    //Here, hashTable is an array where each slot hashTable[j] is a
+    // struct hashNode* (the head of chain)
+    
+    //returns key to map the given value to hash table
+    // a hash function that takes any integer and consistently maps it to valid
+    // bucket index.
+    int hash(int key)
+    {
+        return (key % tableSize + tableSize) % tableSize;
+    }
+
+    //function that inserts a hash node to a linked list.
+    //the first node points to NULL
+    //for example, initialized to hashTable[h] -> NULL
+    // after first insert it will be hashTable[h] -> node1 -> NULL
+    void insert(int key, int index)
+    {
+        int h = hash(key);
+        struct hashNode* node = malloc(sizeof(struct hashNode));
+        node->keyValue = key;
+        node->index = index;
+        node->next = hashTable[h];
+        hashTable[h] = node;
+    }
+
+    //function to find if the complement is in the hash table
+    struct hashNode* find(int key)
+    {
+        int h = hash(key);
+        struct hashNode* node = hashTable[h];
+        while (node)
+        {
+            if (node->keyValue == key) return node;
+            node = node->next;
+        }
+        return NULL;
+    }
+
+    int* result = malloc(2 * sizeof(int));
+
+    for (int i = 0; i < numsSize; i++)
+    {
+        int complement = target - nums[i];
+
+        struct hashNode* node = find(complement);
+
+        if (node)
+        {
+            //-> means a pointer to struct, it can be use to access field inside
+            // that struct.
+            //-> is an operator in which is the as (*pointer).field so below
+            // node->index is equal to (*node).index
+            result[0] = node->index;
+            result[1] = i;
+
+            *returnSize = 2;
+            return result;
+        }
+
+        insert(nums[i], i);
+    }
+
+    *returnSize = 0;
+    return NULL;
 }
