@@ -1,5 +1,12 @@
 # First solution
 #  long solution, trying to get the logic of the problem and how linked list works
+# Execution time = 3ms, Memory size = 19.3mb
+#
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
 class Solution:
     def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:
         #creates a dummy node, an initial dummy node say 0
@@ -94,4 +101,61 @@ class Solution:
         # where 0, the head, is the dummy node.
         # so, returning dummy_head.next will only return 7 -> 0 -> 8 -> None
         # which is the correct sum
+        return dummy_head.next
+
+
+# Second solution
+#  factored code of first solution
+# Execution time = 3ms, Memory size = 19.4mb
+#
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:
+        #initialized dummy node of 0, 0 -> None
+        dummy_head = ListNode(0)
+
+        #set pointer to initialized dummy node
+        current = dummy_head
+
+        current_1 = l1
+        current_2 = l2
+        carry = 0
+
+        #check simultaneously three condition to have a single loop, loop will not
+        # terminate as long as there is node from l1 or l2 and also checks for
+        # trailing carry at the end
+        while (current_1 or current_2 or carry == 1):
+            if current_1:
+                #if current_1 points to node that is not None, set its value to
+                # num_1 and point the current_1 pointer to next node
+                num_1 = current_1.val
+                current_1 = current_1.next
+            else:
+                #this will handle the addition if node value is None
+                num_1 = 0
+
+            if current_2:
+                #if current_2 points to node that is not None, set its value to
+                # num_2 and point the current_2 pointer to next Node
+                num_2 = current_2.val
+                current_2 = current_2.next
+            else:
+                #this will handle the addition if node value is None
+                num_2 = 0
+
+            total = num_1 + num_2 + carry
+            carry = total // 10
+            sub_total = total % 10
+
+            #initialized sub_total to a ListNode class
+            new_node = ListNode(sub_total)
+            #connect current node to new_node
+            current.next = new_node
+            #move pointer to new_node
+            current = new_node
+
         return dummy_head.next
