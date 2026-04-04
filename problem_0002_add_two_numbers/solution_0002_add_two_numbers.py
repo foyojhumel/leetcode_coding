@@ -121,6 +121,7 @@ class Solution:
         #set pointer to initialized dummy node
         current = dummy_head
 
+        #get the value of first node of given ListNode
         current_1 = l1
         current_2 = l2
         carry = 0
