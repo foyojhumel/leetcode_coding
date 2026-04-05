@@ -67,3 +67,40 @@ class Solution:
                 count = letter_count + 1
         
         return lengthiest
+
+# Third solution
+#  using a single for loop to look into the string once
+# Execution time = 23ms, Memory size = 19.21mb
+class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        #the goal is to return the longest chain of non-repeating characters
+        #the possible longest will be 26, the count of English alphabets
+        #there are many possible chain of non-repeating characters, we are
+        # only to return the maximum count
+
+        #if list contains one or no character, return its length
+        if (len(s) < 2):
+            return len(s)
+
+        #stores the sub_string
+        sub_string = []
+
+        #track of sub_string count every time a repeating character is found
+        length = 0
+
+        #look into the given string once
+        for i in range(len(s)):
+            #if current letter is present in the sub_string
+            if (s[i] in sub_string):
+                #find the index of the same character in the substring
+                same_char_index = sub_string.index(s[i])
+                #slice the substring
+                sub_string = sub_string[same_char_index+1:]
+            #add the letter at the end of substring
+            sub_string.append(s[i])
+            
+            #set length to what is larger in length, the current length or
+            # length of substring
+            length = max(length, len(sub_string))
+
+        return length
