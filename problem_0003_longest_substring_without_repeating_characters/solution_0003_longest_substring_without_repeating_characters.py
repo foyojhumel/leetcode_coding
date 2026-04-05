@@ -104,3 +104,38 @@ class Solution:
             length = max(length, len(sub_string))
 
         return length
+
+# Fourth solution
+#  no initialized empty list to hold the sliced string.
+#  NOTE! surprisingly, this does not improve the memory size only the execution time
+# Execution time = 14ms, Memory size = 19.2mb
+class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        #the goal is to return the longest chain of non-repeating characters
+        #the possible longest will be 26, the count of English alphabets
+        #there are many possible chain of non-repeating characters, we are
+        # only to return the maximum count
+
+        #if list contains one or no character, return its length
+        if (len(s) < 2):
+            return len(s)
+
+        #sliding index, initially set to 0
+        sliding_index = 0
+
+        #track of sub_string count every time a repeating character is found
+        length = 0
+
+        for i in range(len(s)):
+            #if character is found in the substring
+            if (s[i] in s[sliding_index:i]):
+                #get the index of same character
+                same_char_index = s[sliding_index:i].index(s[i])
+                #move sliding_index to the index of same character
+                #move one more position to for new substring of sliced list
+                sliding_index = sliding_index + same_char_index + 1
+            
+            #find the length of substring for each iteration
+            length = max(length, len(s[sliding_index:i+1]))
+
+        return length
